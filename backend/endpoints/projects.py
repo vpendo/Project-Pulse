@@ -3,9 +3,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import desc, asc, func
 from typing import Optional
 
-from backend.db.session import SessionLocal
-from backend.models.project import Project
-from backend.schemas.project import ProjectCreate, ProjectUpdate, ProjectOut
+from db.session import SessionLocal
+from models.project import Project
+from schemas.project import ProjectCreate, ProjectUpdate, ProjectOut
 
 
 router = APIRouter(prefix="/projects", tags=["Projects"])

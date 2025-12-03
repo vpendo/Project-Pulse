@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.db.session import Base, engine
-from backend.endpoints import projects
+from db.session import Base, engine
+from endpoints import projects
 
 
 Base.metadata.create_all(bind=engine)
@@ -17,6 +17,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "https://projectpulsedashboard.netlify.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],

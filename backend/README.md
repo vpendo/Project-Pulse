@@ -114,7 +114,7 @@ You should now be in: `Project-Pulse/` (not `Project-Pulse/backend/`)
 Start the FastAPI development server:
 
 ```bash
-uvicorn backend.main:app --reload
+uvicorn main:app --reload
 ```
 
 **Important:** Run this command from the `Project-Pulse` root directory, NOT from inside the `backend` folder.
