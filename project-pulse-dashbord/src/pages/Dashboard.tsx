@@ -32,6 +32,7 @@ const DashboardPage = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
         {/* Project Overview */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to Your Dashboard</h1>
@@ -64,12 +65,7 @@ const DashboardPage = () => {
             onClick={handleAddProject}
             className="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors shadow-md hover:shadow-lg flex items-center space-x-2 uppercase tracking-wide"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -107,9 +103,14 @@ const DashboardPage = () => {
             </button>
           </div>
         ) : (
-          <div className="grid gap-6">
+          /* UPDATED TO 3 COLUMNS */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} onEdit={handleEditProject} />
+              <ProjectCard
+                key={project.id}
+                project={project}
+                onEdit={handleEditProject}
+              />
             ))}
           </div>
         )}
@@ -126,4 +127,3 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
-
