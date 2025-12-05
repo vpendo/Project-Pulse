@@ -64,15 +64,16 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 transform transition-all">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900">
             {project ? 'Edit Project' : 'Add New Project'}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 hover:text-gray-600 transition-colors p-2 rounded-lg hover:bg-gray-100"
+            aria-label="Close modal"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -85,9 +86,9 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
               Project Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -96,16 +97,24 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all ${
+                errors.name ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-gray-400'
               }`}
               placeholder="Enter project name"
+              autoFocus
             />
-            {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+            {errors.name && (
+              <p className="mt-2 text-sm text-red-600 font-medium flex items-center">
+                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                {errors.name}
+              </p>
+            )}
           </div>
 
-          <div className="mb-4">
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+          <div>
+            <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
               Description
             </label>
             <textarea
@@ -113,14 +122,14 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder="Enter project description"
+              rows={5}
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all hover:border-gray-400 resize-none"
+              placeholder="Enter project description (optional)"
             />
           </div>
 
-          <div className="mb-6">
-            <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
+          <div>
+            <label htmlFor="status" className="block text-sm font-semibold text-gray-700 mb-2">
               Status
             </label>
             <select
@@ -128,7 +137,7 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all hover:border-gray-400 cursor-pointer bg-white"
             >
               <option value="Not Started">Not Started</option>
               <option value="In Progress">In Progress</option>
@@ -136,17 +145,17 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
             </select>
           </div>
 
-          <div className="flex justify-end space-x-3">
+          <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+              className="px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors uppercase tracking-wide"
+              className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all font-bold uppercase tracking-wide shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
             >
               {project ? 'Update' : 'Create'} Project
             </button>
