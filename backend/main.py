@@ -39,9 +39,7 @@ app.include_router(projects.router)
 def root():
     return {
         "message": "Welcome to Project Pulse API",
-        "version": "1.0.0",
-        "api_url": settings.API_BASE_URL,
-        "environment": settings.ENVIRONMENT
+        
     }
 
 
