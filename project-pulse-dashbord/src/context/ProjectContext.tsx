@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 import type { ReactNode } from 'react';
 import type { Project, ProjectStatus } from '../types/project';
 
@@ -12,7 +13,12 @@ interface ProjectContextType {
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? 'https://project-pulse-4qj1.onrender.com';
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
+});
 
 interface ApiProject {
   id: number;
@@ -39,16 +45,12 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/projects`);
-        if (!response.ok) {
-          // eslint-disable-next-line no-console
-          console.error('Failed to fetch projects from API');
-          return;
-        }
-        const data: ApiProject[] = await response.json();
-        setProjects(data.map(mapApiProject));
+        const { data } = await api.get<{ items?: ApiProject[]; total?: number; page?: number }>(
+          '/projects'
+        );
+        const list = Array.isArray(data) ? data : data.items ?? [];
+        setProjects(list.map(mapApiProject));
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error('Error fetching projects:', error);
       }
     };
@@ -60,26 +62,13 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>
   ): Promise<void> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/projects`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: projectData.name,
-          description: projectData.description,
-          status: projectData.status,
-        }),
+      const { data } = await api.post<ApiProject>('/projects', {
+        name: projectData.name,
+        description: projectData.description,
+        status: projectData.status,
       });
-
-      if (!response.ok) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to create project');
-        return;
-      }
-
-      const created: ApiProject = await response.json();
-      setProjects((prev) => [...prev, mapApiProject(created)]);
+      setProjects((prev) => [...prev, mapApiProject(data)]);
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('Error creating project:', error);
     }
   };
@@ -90,26 +79,12 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   ): Promise<void> => {
     try {
       const numericId = Number(id);
-      const response = await fetch(`${API_BASE_URL}/projects/${numericId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      });
+      const { data } = await api.put<ApiProject>(`/projects/${numericId}`, { status });
 
-      if (!response.ok) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to update project status');
-        return;
-      }
-
-      const updated: ApiProject = await response.json();
       setProjects((prev) =>
-        prev.map((project) =>
-          project.id === id ? mapApiProject(updated) : project
-        )
+        prev.map((project) => (project.id === id ? mapApiProject(data) : project))
       );
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('Error updating project status:', error);
     }
   };
@@ -120,30 +95,16 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   ): Promise<void> => {
     try {
       const numericId = Number(id);
-      const response = await fetch(`${API_BASE_URL}/projects/${numericId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: projectData.name,
-          description: projectData.description,
-          status: projectData.status,
-        }),
+      const { data } = await api.put<ApiProject>(`/projects/${numericId}`, {
+        name: projectData.name,
+        description: projectData.description,
+        status: projectData.status,
       });
 
-      if (!response.ok) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to update project');
-        return;
-      }
-
-      const updated: ApiProject = await response.json();
       setProjects((prev) =>
-        prev.map((project) =>
-          project.id === id ? mapApiProject(updated) : project
-        )
+        prev.map((project) => (project.id === id ? mapApiProject(data) : project))
       );
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('Error updating project:', error);
     }
   };
@@ -151,19 +112,9 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   const deleteProject = async (id: string): Promise<void> => {
     try {
       const numericId = Number(id);
-      const response = await fetch(`${API_BASE_URL}/projects/${numericId}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok && response.status !== 204) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to delete project');
-        return;
-      }
-
+      await api.delete(`/projects/${numericId}`);
       setProjects((prev) => prev.filter((project) => project.id !== id));
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('Error deleting project:', error);
     }
   };
