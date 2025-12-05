@@ -27,7 +27,8 @@ uvicorn main:app --reload
 Server runs at http://127.0.0.1:8000 and creates `project_pulse.db` automatically.
 
 ### Verify locally
-- Root: http://127.0.0.1:8000/ → `{"message": "Welcome to Project Pulse API"}`
+- Root: http://127.0.0.1:8000/ → Returns API info including deployment URL
+- Health check: http://127.0.0.1:8000/api → Returns API status and configuration
 - Docs: http://127.0.0.1:8000/docs
 - List projects: http://127.0.0.1:8000/projects
 
@@ -48,8 +49,28 @@ curl -X POST http://127.0.0.1:8000/projects \
   -d '{"name": "My Project", "description": "Test", "status": "Not Started"}'
 ```
 
+### Configuration
+
+The backend is configured to connect to the deployment URL: `https://project-pulse-4qj1.onrender.com`
+
+Environment variables (optional, defaults provided):
+- `API_BASE_URL` - API base URL (default: `https://project-pulse-4qj1.onrender.com`)
+- `FRONTEND_URL` - Frontend URL for CORS (default: `https://projectpulsedashboard.netlify.app`)
+- `ENVIRONMENT` - Environment mode: `production` or `development` (default: `production`)
+
+Create a `.env` file in the backend directory for local development:
+```env
+# Local development settings
+API_BASE_URL=http://127.0.0.1:8000
+FRONTEND_URL=http://localhost:5173
+ENVIRONMENT=development
+```
+
+**Note:** When running locally with `uvicorn main:app --reload`, the backend automatically runs at `http://127.0.0.1:8000` (port 8000 is uvicorn's default).
+
 ### Deployment notes
 - Deployed on Render at https://project-pulse-4qj1.onrender.com
+- Health check endpoint: `GET /api` - returns API status and configuration
 - CORS allows:
   - http://localhost:5173
   - http://127.0.0.1:5173
