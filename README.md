@@ -17,7 +17,7 @@ cd backend
 python -m venv .venv
 .venv\Scripts\activate   # Windows (use source .venv/bin/activate on macOS/Linux)
 pip install -r requirements.txt
-uvicorn backend.main:app --reload
+uvicorn main:app --reload
 ```
 Backend runs at http://127.0.0.1:8000
 
@@ -25,7 +25,7 @@ Frontend
 ```bash
 cd project-pulse-dashbord
 pnpm install
-pnpm dev
+pnpm  run dev
 ```
 Frontend runs at http://localhost:5173
 

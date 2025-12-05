@@ -22,7 +22,7 @@ cd backend
 python -m venv .venv
 .venv\Scripts\activate   # on Windows (use source .venv/bin/activate on macOS/Linux)
 pip install -r requirements.txt
-uvicorn backend.main:app --reload
+uvicorn main:app --reload
 ```
 Server runs at http://127.0.0.1:8000 and creates `project_pulse.db` automatically.
 
